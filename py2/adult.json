@@ -16,6 +16,19 @@
    "api": "https://www.jingpinx.com/api.php/provide/vod/"
   },
 {
+    "key": "4K.py",
+    "name": "SEX_FHD",
+    "type": 3,
+    "api": "./plugin/adult/4K.py",
+    "style": {
+        "type": "rect",
+        "ratio": 1.7
+    },
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 1
+},
+{
     "key": "Miss",
     "name": "Miss",
     "type": 3,
