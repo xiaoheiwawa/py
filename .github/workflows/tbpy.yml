@@ -1,4 +1,4 @@
-name: Sync PyramidStore Projects
+name: Sync PyramidStore Projects to py1 and py2
 
 on:
   schedule:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout your own repository
+      - name: Checkout your repository
         uses: actions/checkout@v3
 
       - name: Set up Git config
@@ -18,22 +18,22 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 同步 sowahsun/PyramidStore 到 py/py1/
-      - name: Sync PyramidStore to py/py1/
+      # 同步 sowahsun/PyramidStore 到 py1/
+      - name: Sync PyramidStore to py1/
         run: |
-          rm -rf py/py1
-          git clone --depth=1 https://github.com/sowahsun/PyramidStore.git py/py1
-          rm -rf py/py1/.git
+          rm -rf py1
+          git clone --depth=1 https://github.com/sowahsun/PyramidStore.git py1
+          rm -rf py1/.git
 
-      # 同步 skyboy77/PyramidStorejjbjj 到 py/py2/
-      - name: Sync PyramidStorejjbjj to py/py2/
+      # 同步 skyboy77/PyramidStorejjbjj 到 py2/
+      - name: Sync PyramidStorejjbjj to py2/
         run: |
-          rm -rf py/py2
-          git clone --depth=1 https://github.com/skyboy77/PyramidStorejjbjj.git py/py2
-          rm -rf py/py2/.git
+          rm -rf py2
+          git clone --depth=1 https://github.com/skyboy77/PyramidStorejjbjj.git py2
+          rm -rf py2/.git
 
       - name: Commit and push changes
         run: |
-          git add py/py1 py/py2
-          git commit -m "Auto-sync py/py1 and py/py2 from upstream projects [skip ci]" || echo "No changes"
+          git add py1 py2
+          git commit -m "Auto-sync py1 and py2 from upstream GitHub projects [skip ci]" || echo "No changes"
           git push origin main
