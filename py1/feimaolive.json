@@ -4,9 +4,17 @@
         "url": "http://192.168.33.188:35455/tv.m3u"
     },
 {
+        "name": "肥羊NPTV",
+        "url": "https://nptv.freetv.top/juhe.m3u"
+    },
+{
         "name": "smt",
         "url": "http://192.168.33.188/smt.php"
     },
+{
+        "name": "iptv",
+        "url": "https://github.catvod.com/https://raw.githubusercontent.com/kilvn/iptv/refs/heads/master/iptv.m3u"
+    },    
 {
         "name": "BRTV同步更新",
         "url": "https://github.catvod.com/https://github.com/mytv-android/BRTV-Live-M3U8/blob/main/BRTV.m3u"
@@ -22,5 +30,14 @@
 {
         "name": "live杂源",
         "url": "https://github.catvod.com/https://raw.githubusercontent.com/wwb521/live/main/tv.m3u"
-    }
+    },
+{
+        "name": "asia_FM",
+        "url": "./asiaFM.txt"
+    },
+{
+        "name": "radio",
+        "url": "https://live.kilvn.com/radio.m3u"
+    }    
+
 ]

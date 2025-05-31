@@ -388,16 +388,18 @@
             "changeable": 0
         },
         {
-            "key": "采集集合go",
-            "name": "采集集合go",
-            "type": 1,
-            "api": "http://zhangqun1818.serv00.net:5053",
+            "key": "克隆合集",
+            "name": "克隆合集",
+            "type": 4,
+            "api": "http://zhangqun1818.serv00.net/klhj.php",
             "searchable": 1,
+            "quickSearch": 1,
             "style": {
                 "type": "rect",
                 "ratio": 1.33
             },
-            "changeable": 1
+            "changeable": 1,
+            "filterable": 0
         },
         {
             "key": "低端影视",
@@ -692,7 +694,7 @@
     "lives": [
         {
             "name": "直播杂源",
-            "url": "https://gitproxy.mrhjx.cn/https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u"
+            "url": "https://gitproxy.mrhjx.cn/https://raw.githubusercontent.com/wwb521/live/main/tv.m3u"
         },
         {
             "name": "LITV直播(python)",
@@ -706,7 +708,13 @@
         },
         {
             "name": "直播杂源_mirror",
-            "url": "https://github.limoruirui.com/https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u"
+            "url": "https://github.catvod.com/https://raw.githubusercontent.com/wwb521/live/main/tv.m3u"
+        },
+        {
+  "name": "SMT直播(python)",
+  "type": 3,
+  "api": "https://json.doube.eu.org/python/live_smt.py",
+  "ext": { }
         },
         {
             "name": "快直播(python)",
