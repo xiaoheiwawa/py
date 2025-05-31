@@ -18,14 +18,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 同步 sowahsun/PyramidStore 到 py1/
       - name: Sync PyramidStore to py1/
         run: |
           rm -rf py1
           git clone --depth=1 https://github.com/sowahsun/PyramidStore.git py1
           rm -rf py1/.git
 
-      # 同步 skyboy77/PyramidStorejjbjj 到 py2/
       - name: Sync PyramidStorejjbjj to py2/
         run: |
           rm -rf py2
@@ -37,3 +35,14 @@ jobs:
           git add py1 py2
           git commit -m "Auto-sync py1 and py2 from upstream GitHub projects [skip ci]" || echo "No changes"
           git push origin main
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: sync
+    steps:
+      - name: Delete old workflow runs, keep last 10
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          retain_days: 0
+          keep_minimum_runs: 10
