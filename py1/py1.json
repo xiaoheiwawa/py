@@ -703,8 +703,16 @@
             "ext": {}
         },
         {
+            "name": "临时肥羊",
+            "url": "https://nptv.freetv.top/juhe.m3u"
+        },
+        {
             "name": "肥羊",
             "url": "http://192.168.33.188:35455/tv.m3u"
+        },
+        {
+            "name": "brtv_8K",
+            "url": "http://192.168.33.188/fltv.php"
         },
         {
             "name": "直播杂源_mirror",
