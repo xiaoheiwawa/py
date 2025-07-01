@@ -1,45 +1,50 @@
-(function (global, factory) {
+(function(global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
-            (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.JSON5 = factory());
-}(this, (function () {
+        (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.JSON5 = factory());
+}(this, (function() {
     'use strict';
 
     function createCommonjsModule(fn, module) {
-        return module = {exports: {}}, fn(module, module.exports), module.exports;
+        return module = {
+            exports: {}
+        }, fn(module, module.exports), module.exports;
     }
 
-    var _global = createCommonjsModule(function (module) {
+    var _global = createCommonjsModule(function(module) {
         // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-        var global = module.exports = typeof window != 'undefined' && window.Math == Math
-            ? window : typeof self != 'undefined' && self.Math == Math ? self
-                // eslint-disable-next-line no-new-func
-                : Function('return this')();
+        var global = module.exports = typeof window != 'undefined' && window.Math == Math ?
+            window : typeof self != 'undefined' && self.Math == Math ? self
+            // eslint-disable-next-line no-new-func
+            :
+            Function('return this')();
         if (typeof __g == 'number') {
             __g = global;
         } // eslint-disable-line no-undef
     });
 
-    var _core = createCommonjsModule(function (module) {
-        var core = module.exports = {version: '2.6.5'};
+    var _core = createCommonjsModule(function(module) {
+        var core = module.exports = {
+            version: '2.6.5'
+        };
         if (typeof __e == 'number') {
             __e = core;
         } // eslint-disable-line no-undef
     });
     var _core_1 = _core.version;
 
-    var _isObject = function (it) {
+    var _isObject = function(it) {
         return typeof it === 'object' ? it !== null : typeof it === 'function';
     };
 
-    var _anObject = function (it) {
+    var _anObject = function(it) {
         if (!_isObject(it)) {
             throw TypeError(it + ' is not an object!');
         }
         return it;
     };
 
-    var _fails = function (exec) {
+    var _fails = function(exec) {
         try {
             return !!exec();
         } catch (e) {
@@ -48,9 +53,9 @@
     };
 
     // Thank's IE8 for his funny defineProperty
-    var _descriptors = !_fails(function () {
+    var _descriptors = !_fails(function() {
         return Object.defineProperty({}, 'a', {
-            get: function () {
+            get: function() {
                 return 7;
             }
         }).a != 7;
@@ -59,13 +64,13 @@
     var document = _global.document;
     // typeof document.createElement is 'object' in old IE
     var is = _isObject(document) && _isObject(document.createElement);
-    var _domCreate = function (it) {
+    var _domCreate = function(it) {
         return is ? document.createElement(it) : {};
     };
 
-    var _ie8DomDefine = !_descriptors && !_fails(function () {
+    var _ie8DomDefine = !_descriptors && !_fails(function() {
         return Object.defineProperty(_domCreate('div'), 'a', {
-            get: function () {
+            get: function() {
                 return 7;
             }
         }).a != 7;
@@ -75,18 +80,18 @@
 
     // instead of the ES6 spec version, we didn't implement @@toPrimitive case
     // and the second argument - flag - preferred type is a string
-    var _toPrimitive = function (it, S) {
+    var _toPrimitive = function(it, S) {
         if (!_isObject(it)) {
             return it;
         }
         var fn, val;
-        if (S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) {
+        if (S && typeof(fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) {
             return val;
         }
-        if (typeof (fn = it.valueOf) == 'function' && !_isObject(val = fn.call(it))) {
+        if (typeof(fn = it.valueOf) == 'function' && !_isObject(val = fn.call(it))) {
             return val;
         }
-        if (!S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) {
+        if (!S && typeof(fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) {
             return val;
         }
         throw TypeError("Can't convert object to primitive value");
@@ -101,8 +106,8 @@
         if (_ie8DomDefine) {
             try {
                 return dP(O, P, Attributes);
-            } catch (e) { /* empty */
-            }
+            } catch (e) {
+                /* empty */ }
         }
         if ('get' in Attributes || 'set' in Attributes) {
             throw TypeError('Accessors not supported!');
@@ -117,7 +122,7 @@
         f: f
     };
 
-    var _propertyDesc = function (bitmap, value) {
+    var _propertyDesc = function(bitmap, value) {
         return {
             enumerable: !(bitmap & 1),
             configurable: !(bitmap & 2),
@@ -126,31 +131,31 @@
         };
     };
 
-    var _hide = _descriptors ? function (object, key, value) {
+    var _hide = _descriptors ? function(object, key, value) {
         return _objectDp.f(object, key, _propertyDesc(1, value));
-    } : function (object, key, value) {
+    } : function(object, key, value) {
         object[key] = value;
         return object;
     };
 
     var hasOwnProperty = {}.hasOwnProperty;
-    var _has = function (it, key) {
+    var _has = function(it, key) {
         return hasOwnProperty.call(it, key);
     };
 
     var id = 0;
     var px = Math.random();
-    var _uid = function (key) {
+    var _uid = function(key) {
         return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
     };
 
     var _library = false;
 
-    var _shared = createCommonjsModule(function (module) {
+    var _shared = createCommonjsModule(function(module) {
         var SHARED = '__core-js_shared__';
         var store = _global[SHARED] || (_global[SHARED] = {});
 
-        (module.exports = function (key, value) {
+        (module.exports = function(key, value) {
             return store[key] || (store[key] = value !== undefined ? value : {});
         })('versions', []).push({
             version: _core.version,
@@ -161,17 +166,17 @@
 
     var _functionToString = _shared('native-function-to-string', Function.toString);
 
-    var _redefine = createCommonjsModule(function (module) {
+    var _redefine = createCommonjsModule(function(module) {
         var SRC = _uid('src');
 
         var TO_STRING = 'toString';
         var TPL = ('' + _functionToString).split(TO_STRING);
 
-        _core.inspectSource = function (it) {
+        _core.inspectSource = function(it) {
             return _functionToString.call(it);
         };
 
-        (module.exports = function (O, key, val, safe) {
+        (module.exports = function(O, key, val, safe) {
             var isFunction = typeof val == 'function';
             if (isFunction) {
                 _has(val, 'name') || _hide(val, 'name', key);
@@ -198,7 +203,7 @@
         });
     });
 
-    var _aFunction = function (it) {
+    var _aFunction = function(it) {
         if (typeof it != 'function') {
             throw TypeError(it + ' is not a function!');
         }
@@ -207,33 +212,33 @@
 
     // optional / simple context binding
 
-    var _ctx = function (fn, that, length) {
+    var _ctx = function(fn, that, length) {
         _aFunction(fn);
         if (that === undefined) {
             return fn;
         }
         switch (length) {
             case 1:
-                return function (a) {
+                return function(a) {
                     return fn.call(that, a);
                 };
             case 2:
-                return function (a, b) {
+                return function(a, b) {
                     return fn.call(that, a, b);
                 };
             case 3:
-                return function (a, b, c) {
+                return function(a, b, c) {
                     return fn.call(that, a, b, c);
                 };
         }
-        return function (/* ...args */) {
+        return function( /* ...args */ ) {
             return fn.apply(that, arguments);
         };
     };
 
     var PROTOTYPE = 'prototype';
 
-    var $export = function (type, name, source) {
+    var $export = function(type, name, source) {
         var IS_FORCED = type & $export.F;
         var IS_GLOBAL = type & $export.G;
         var IS_STATIC = type & $export.S;
@@ -268,25 +273,25 @@
     };
     _global.core = _core;
     // type bitmap
-    $export.F = 1;   // forced
-    $export.G = 2;   // global
-    $export.S = 4;   // static
-    $export.P = 8;   // proto
-    $export.B = 16;  // bind
-    $export.W = 32;  // wrap
-    $export.U = 64;  // safe
+    $export.F = 1; // forced
+    $export.G = 2; // global
+    $export.S = 4; // static
+    $export.P = 8; // proto
+    $export.B = 16; // bind
+    $export.W = 32; // wrap
+    $export.U = 64; // safe
     $export.R = 128; // real proto method for `library`
     var _export = $export;
 
     // 7.1.4 ToInteger
     var ceil = Math.ceil;
     var floor = Math.floor;
-    var _toInteger = function (it) {
+    var _toInteger = function(it) {
         return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
     };
 
     // 7.2.1 RequireObjectCoercible(argument)
-    var _defined = function (it) {
+    var _defined = function(it) {
         if (it == undefined) {
             throw TypeError("Can't call method on  " + it);
         }
@@ -295,8 +300,8 @@
 
     // true  -> String#at
     // false -> String#codePointAt
-    var _stringAt = function (TO_STRING) {
-        return function (that, pos) {
+    var _stringAt = function(TO_STRING) {
+        return function(that, pos) {
             var s = String(_defined(that));
             var i = _toInteger(pos);
             var l = s.length;
@@ -305,9 +310,9 @@
                 return TO_STRING ? '' : undefined;
             }
             a = s.charCodeAt(i);
-            return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-                ? TO_STRING ? s.charAt(i) : a
-                : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+            return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff ?
+                TO_STRING ? s.charAt(i) : a :
+                TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
         };
     };
 
@@ -323,7 +328,7 @@
 
     var max = Math.max;
     var min = Math.min;
-    var _toAbsoluteIndex = function (index, length) {
+    var _toAbsoluteIndex = function(index, length) {
         index = _toInteger(index);
         return index < 0 ? max(index + length, 0) : min(index, length);
     };
@@ -346,9 +351,9 @@
                 if (_toAbsoluteIndex(code, 0x10ffff) !== code) {
                     throw RangeError(code + ' is not a valid code point');
                 }
-                res.push(code < 0x10000
-                    ? fromCharCode(code)
-                    : fromCharCode(((code -= 0x10000) >> 10) + 0xd800, code % 0x400 + 0xdc00)
+                res.push(code < 0x10000 ?
+                    fromCharCode(code) :
+                    fromCharCode(((code -= 0x10000) >> 10) + 0xd800, code % 0x400 + 0xdc00)
                 );
             }
             return res.join('');
@@ -435,7 +440,9 @@
         } while (token.type !== 'eof')
 
         if (typeof reviver === 'function') {
-            return internalize({'': root}, '', reviver)
+            return internalize({
+                '': root
+            }, '', reviver)
         }
 
         return root
@@ -491,7 +498,7 @@
         doubleQuote = false;
         sign = 1;
 
-        for (; ;) {
+        for (;;) {
             c = peek();
 
             // This code is unreachable.
@@ -1016,9 +1023,9 @@
                 case '[':
                     return newToken('punctuator', read())
 
-                // This code is unreachable since the default lexState handles eof.
-                // case undefined:
-                //     return newToken('eof')
+                    // This code is unreachable since the default lexState handles eof.
+                    // case undefined:
+                    //     return newToken('eof')
             }
 
             lexState = 'value';
@@ -1387,9 +1394,9 @@
                 value = token.value;
                 break
 
-            // This code is unreachable.
-            // default:
-            //     throw invalidToken()
+                // This code is unreachable.
+                // default:
+                //     throw invalidToken()
         }
 
         if (root === undefined) {
@@ -1575,7 +1582,9 @@
             gap = space.substr(0, 10);
         }
 
-        return serializeProperty('', {'': value})
+        return serializeProperty('', {
+            '': value
+        })
 
         function serializeProperty(key, holder) {
             var value = holder[key];
@@ -1676,7 +1685,7 @@
                 product += c;
             }
 
-            var quoteChar = quote || Object.keys(quotes).reduce(function (a, b) {
+            var quoteChar = quote || Object.keys(quotes).reduce(function(a, b) {
                 return (quotes[a] < quotes[b]) ? a : b;
             });
 

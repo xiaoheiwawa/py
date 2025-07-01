@@ -1,4 +1,5 @@
-;(function (root, factory) {
+;
+(function(root, factory) {
     if (typeof exports === "object") {
         // CommonJS
         module.exports = exports = factory();
@@ -9,14 +10,14 @@
         // Global (browser)
         globalThis.CryptoJS = factory();
     }
-}(this, function () {
+}(this, function() {
 
     /*globals window, global, require*/
 
     /**
      * CryptoJS core components.
      */
-    var CryptoJS = CryptoJS || (function (Math, undefined) {
+    var CryptoJS = CryptoJS || (function(Math, undefined) {
 
         var crypto;
 
@@ -49,31 +50,28 @@
         if (!crypto && typeof require === 'function') {
             try {
                 crypto = require('crypto');
-            } catch (err) {
-            }
+            } catch (err) {}
         }
 
         /*
-	     * Cryptographically secure pseudorandom number generator
-	     *
-	     * As Math.random() is cryptographically not safe to use
-	     */
-        var cryptoSecureRandomInt = function () {
+         * Cryptographically secure pseudorandom number generator
+         *
+         * As Math.random() is cryptographically not safe to use
+         */
+        var cryptoSecureRandomInt = function() {
             if (crypto) {
                 // Use getRandomValues method (Browser)
                 if (typeof crypto.getRandomValues === 'function') {
                     try {
                         return crypto.getRandomValues(new Uint32Array(1))[0];
-                    } catch (err) {
-                    }
+                    } catch (err) {}
                 }
 
                 // Use randomBytes method (NodeJS)
                 if (typeof crypto.randomBytes === 'function') {
                     try {
                         return crypto.randomBytes(4).readInt32LE();
-                    } catch (err) {
-                    }
+                    } catch (err) {}
                 }
             }
 
@@ -81,14 +79,13 @@
         };
 
         /*
-	     * Local polyfill of Object.create
+         * Local polyfill of Object.create
 
-	     */
-        var create = Object.create || (function () {
-            function F() {
-            }
+         */
+        var create = Object.create || (function() {
+            function F() {}
 
-            return function (obj) {
+            return function(obj) {
                 var subtype;
 
                 F.prototype = obj;
@@ -114,7 +111,7 @@
         /**
          * Base object for prototypal inheritance.
          */
-        var Base = C_lib.Base = (function () {
+        var Base = C_lib.Base = (function() {
 
 
             return {
@@ -136,7 +133,7 @@
                  *         }
                  *     });
                  */
-                extend: function (overrides) {
+                extend: function(overrides) {
                     // Spawn
                     var subtype = create(this);
 
@@ -147,7 +144,7 @@
 
                     // Create default initializer
                     if (!subtype.hasOwnProperty('init') || this.init === subtype.init) {
-                        subtype.init = function () {
+                        subtype.init = function() {
                             subtype.$super.init.apply(this, arguments);
                         };
                     }
@@ -173,7 +170,7 @@
                  *
                  *     var instance = MyType.create();
                  */
-                create: function () {
+                create: function() {
                     var instance = this.extend();
                     instance.init.apply(instance, arguments);
 
@@ -192,8 +189,7 @@
                  *         }
                  *     });
                  */
-                init: function () {
-                },
+                init: function() {},
 
                 /**
                  * Copies properties into this object.
@@ -206,7 +202,7 @@
                  *         field: 'value'
                  *     });
                  */
-                mixIn: function (properties) {
+                mixIn: function(properties) {
                     for (var propertyName in properties) {
                         if (properties.hasOwnProperty(propertyName)) {
                             this[propertyName] = properties[propertyName];
@@ -228,7 +224,7 @@
                  *
                  *     var clone = instance.clone();
                  */
-                clone: function () {
+                clone: function() {
                     return this.init.prototype.extend(this);
                 }
             };
@@ -253,7 +249,7 @@
              *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607]);
              *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607], 6);
              */
-            init: function (words, sigBytes) {
+            init: function(words, sigBytes) {
                 words = this.words = words || [];
 
                 if (sigBytes != undefined) {
@@ -276,7 +272,7 @@
              *     var string = wordArray.toString();
              *     var string = wordArray.toString(CryptoJS.enc.Utf8);
              */
-            toString: function (encoder) {
+            toString: function(encoder) {
                 return (encoder || Hex).stringify(this);
             },
 
@@ -291,7 +287,7 @@
              *
              *     wordArray1.concat(wordArray2);
              */
-            concat: function (wordArray) {
+            concat: function(wordArray) {
                 // Shortcuts
                 var thisWords = this.words;
                 var thatWords = wordArray.words;
@@ -327,7 +323,7 @@
              *
              *     wordArray.clamp();
              */
-            clamp: function () {
+            clamp: function() {
                 // Shortcuts
                 var words = this.words;
                 var sigBytes = this.sigBytes;
@@ -346,7 +342,7 @@
              *
              *     var clone = wordArray.clone();
              */
-            clone: function () {
+            clone: function() {
                 var clone = Base.clone.call(this);
                 clone.words = this.words.slice(0);
 
@@ -366,7 +362,7 @@
              *
              *     var wordArray = CryptoJS.lib.WordArray.random(16);
              */
-            random: function (nBytes) {
+            random: function(nBytes) {
                 var words = [];
 
                 for (var i = 0; i < nBytes; i += 4) {
@@ -399,7 +395,7 @@
              *
              *     var hexString = CryptoJS.enc.Hex.stringify(wordArray);
              */
-            stringify: function (wordArray) {
+            stringify: function(wordArray) {
                 // Shortcuts
                 var words = wordArray.words;
                 var sigBytes = wordArray.sigBytes;
@@ -428,7 +424,7 @@
              *
              *     var wordArray = CryptoJS.enc.Hex.parse(hexString);
              */
-            parse: function (hexStr) {
+            parse: function(hexStr) {
                 // Shortcut
                 var hexStrLength = hexStr.length;
 
@@ -459,7 +455,7 @@
              *
              *     var latin1String = CryptoJS.enc.Latin1.stringify(wordArray);
              */
-            stringify: function (wordArray) {
+            stringify: function(wordArray) {
                 // Shortcuts
                 var words = wordArray.words;
                 var sigBytes = wordArray.sigBytes;
@@ -487,7 +483,7 @@
              *
              *     var wordArray = CryptoJS.enc.Latin1.parse(latin1String);
              */
-            parse: function (latin1Str) {
+            parse: function(latin1Str) {
                 // Shortcut
                 var latin1StrLength = latin1Str.length;
 
@@ -518,7 +514,7 @@
              *
              *     var utf8String = CryptoJS.enc.Utf8.stringify(wordArray);
              */
-            stringify: function (wordArray) {
+            stringify: function(wordArray) {
                 try {
                     return decodeURIComponent(escape(Latin1.stringify(wordArray)));
                 } catch (e) {
@@ -539,7 +535,7 @@
              *
              *     var wordArray = CryptoJS.enc.Utf8.parse(utf8String);
              */
-            parse: function (utf8Str) {
+            parse: function(utf8Str) {
                 return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
             }
         };
@@ -559,7 +555,7 @@
              *
              *     bufferedBlockAlgorithm.reset();
              */
-            reset: function () {
+            reset: function() {
                 // Initial values
                 this._data = new WordArray.init();
                 this._nDataBytes = 0;
@@ -575,7 +571,7 @@
              *     bufferedBlockAlgorithm._append('data');
              *     bufferedBlockAlgorithm._append(wordArray);
              */
-            _append: function (data) {
+            _append: function(data) {
                 // Convert string to WordArray, else assume WordArray already
                 if (typeof data == 'string') {
                     data = Utf8.parse(data);
@@ -600,7 +596,7 @@
              *     var processedData = bufferedBlockAlgorithm._process();
              *     var processedData = bufferedBlockAlgorithm._process(!!'flush');
              */
-            _process: function (doFlush) {
+            _process: function(doFlush) {
                 var processedWords;
 
                 // Shortcuts
@@ -652,7 +648,7 @@
              *
              *     var clone = bufferedBlockAlgorithm.clone();
              */
-            clone: function () {
+            clone: function() {
                 var clone = Base.clone.call(this);
                 clone._data = this._data.clone();
 
@@ -682,7 +678,7 @@
              *
              *     var hasher = CryptoJS.algo.SHA256.create();
              */
-            init: function (cfg) {
+            init: function(cfg) {
                 // Apply config defaults
                 this.cfg = this.cfg.extend(cfg);
 
@@ -697,7 +693,7 @@
              *
              *     hasher.reset();
              */
-            reset: function () {
+            reset: function() {
                 // Reset data buffer
                 BufferedBlockAlgorithm.reset.call(this);
 
@@ -717,7 +713,7 @@
              *     hasher.update('message');
              *     hasher.update(wordArray);
              */
-            update: function (messageUpdate) {
+            update: function(messageUpdate) {
                 // Append
                 this._append(messageUpdate);
 
@@ -742,7 +738,7 @@
              *     var hash = hasher.finalize('message');
              *     var hash = hasher.finalize(wordArray);
              */
-            finalize: function (messageUpdate) {
+            finalize: function(messageUpdate) {
                 // Final message update
                 if (messageUpdate) {
                     this._append(messageUpdate);
@@ -769,8 +765,8 @@
              *
              *     var SHA256 = CryptoJS.lib.Hasher._createHelper(CryptoJS.algo.SHA256);
              */
-            _createHelper: function (hasher) {
-                return function (message, cfg) {
+            _createHelper: function(hasher) {
+                return function(message, cfg) {
                     return new hasher.init(cfg).finalize(message);
                 };
             },
@@ -788,8 +784,8 @@
              *
              *     var HmacSHA256 = CryptoJS.lib.Hasher._createHmacHelper(CryptoJS.algo.SHA256);
              */
-            _createHmacHelper: function (hasher) {
-                return function (message, key) {
+            _createHmacHelper: function(hasher) {
+                return function(message, key) {
                     return new C_algo.HMAC.init(hasher, key).finalize(message);
                 };
             }
@@ -804,7 +800,7 @@
     }(Math));
 
 
-    (function (undefined) {
+    (function(undefined) {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -830,7 +826,7 @@
              *
              *     var x64Word = CryptoJS.x64.Word.create(0x00010203, 0x04050607);
              */
-            init: function (high, low) {
+            init: function(high, low) {
                 this.high = high;
                 this.low = low;
             }
@@ -1028,7 +1024,7 @@
              *         CryptoJS.x64.Word.create(0x18191a1b, 0x1c1d1e1f)
              *     ], 10);
              */
-            init: function (words, sigBytes) {
+            init: function(words, sigBytes) {
                 words = this.words = words || [];
 
                 if (sigBytes != undefined) {
@@ -1047,7 +1043,7 @@
              *
              *     var x32WordArray = x64WordArray.toX32();
              */
-            toX32: function () {
+            toX32: function() {
                 // Shortcuts
                 var x64Words = this.words;
                 var x64WordsLength = x64Words.length;
@@ -1072,7 +1068,7 @@
              *
              *     var clone = x64WordArray.clone();
              */
-            clone: function () {
+            clone: function() {
                 var clone = Base.clone.call(this);
 
                 // Clone "words" array
@@ -1090,7 +1086,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Check if typed arrays are supported
         if (typeof ArrayBuffer != 'function') {
             return;
@@ -1105,7 +1101,7 @@
         var superInit = WordArray.init;
 
         // Augment WordArray.init to handle typed arrays
-        var subInit = WordArray.init = function (typedArray) {
+        var subInit = WordArray.init = function(typedArray) {
             // Convert buffers to uint8
             if (typedArray instanceof ArrayBuffer) {
                 typedArray = new Uint8Array(typedArray);
@@ -1148,7 +1144,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -1172,7 +1168,7 @@
              *
              *     var utf16String = CryptoJS.enc.Utf16.stringify(wordArray);
              */
-            stringify: function (wordArray) {
+            stringify: function(wordArray) {
                 // Shortcuts
                 var words = wordArray.words;
                 var sigBytes = wordArray.sigBytes;
@@ -1200,7 +1196,7 @@
              *
              *     var wordArray = CryptoJS.enc.Utf16.parse(utf16String);
              */
-            parse: function (utf16Str) {
+            parse: function(utf16Str) {
                 // Shortcut
                 var utf16StrLength = utf16Str.length;
 
@@ -1231,7 +1227,7 @@
              *
              *     var utf16Str = CryptoJS.enc.Utf16LE.stringify(wordArray);
              */
-            stringify: function (wordArray) {
+            stringify: function(wordArray) {
                 // Shortcuts
                 var words = wordArray.words;
                 var sigBytes = wordArray.sigBytes;
@@ -1259,7 +1255,7 @@
              *
              *     var wordArray = CryptoJS.enc.Utf16LE.parse(utf16Str);
              */
-            parse: function (utf16Str) {
+            parse: function(utf16Str) {
                 // Shortcut
                 var utf16StrLength = utf16Str.length;
 
@@ -1279,7 +1275,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -1303,7 +1299,7 @@
              *
              *     var base64String = CryptoJS.enc.Base64.stringify(wordArray);
              */
-            stringify: function (wordArray) {
+            stringify: function(wordArray) {
                 // Shortcuts
                 var words = wordArray.words;
                 var sigBytes = wordArray.sigBytes;
@@ -1321,7 +1317,8 @@
 
                     var triplet = (byte1 << 16) | (byte2 << 8) | byte3;
 
-                    for (var j = 0; (j < 4) && (i + j * 0.75 < sigBytes); j++) {
+                    for (var j = 0;
+                        (j < 4) && (i + j * 0.75 < sigBytes); j++) {
                         base64Chars.push(map.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
                     }
                 }
@@ -1350,7 +1347,7 @@
              *
              *     var wordArray = CryptoJS.enc.Base64.parse(base64String);
              */
-            parse: function (base64Str) {
+            parse: function(base64Str) {
                 // Shortcuts
                 var base64StrLength = base64Str.length;
                 var map = this._map;
@@ -1397,7 +1394,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -1423,7 +1420,7 @@
              *
              *     var base64String = CryptoJS.enc.Base64url.stringify(wordArray);
              */
-            stringify: function (wordArray, urlSafe = true) {
+            stringify: function(wordArray, urlSafe = true) {
                 // Shortcuts
                 var words = wordArray.words;
                 var sigBytes = wordArray.sigBytes;
@@ -1441,7 +1438,8 @@
 
                     var triplet = (byte1 << 16) | (byte2 << 8) | byte3;
 
-                    for (var j = 0; (j < 4) && (i + j * 0.75 < sigBytes); j++) {
+                    for (var j = 0;
+                        (j < 4) && (i + j * 0.75 < sigBytes); j++) {
                         base64Chars.push(map.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
                     }
                 }
@@ -1472,7 +1470,7 @@
              *
              *     var wordArray = CryptoJS.enc.Base64url.parse(base64String);
              */
-            parse: function (base64Str, urlSafe = true) {
+            parse: function(base64Str, urlSafe = true) {
                 // Shortcuts
                 var base64StrLength = base64Str.length;
                 var map = urlSafe ? this._safe_map : this._map;
@@ -1519,7 +1517,7 @@
         }
     }());
 
-    (function (Math) {
+    (function(Math) {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -1531,7 +1529,7 @@
         var T = [];
 
         // Compute constants
-        (function () {
+        (function() {
             for (var i = 0; i < 64; i++) {
                 T[i] = (Math.abs(Math.sin(i + 1)) * 0x100000000) | 0;
             }
@@ -1541,14 +1539,14 @@
          * MD5 hash algorithm.
          */
         var MD5 = C_algo.MD5 = Hasher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 this._hash = new WordArray.init([
                     0x67452301, 0xefcdab89,
                     0x98badcfe, 0x10325476
                 ]);
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 // Swap endian
                 for (var i = 0; i < 16; i++) {
                     // Shortcuts
@@ -1663,7 +1661,7 @@
                 H[3] = (H[3] + d) | 0;
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 // Shortcuts
                 var data = this._data;
                 var dataWords = data.words;
@@ -1707,7 +1705,7 @@
                 return hash;
             },
 
-            clone: function () {
+            clone: function() {
                 var clone = Hasher.clone.call(this);
                 clone._hash = this._hash.clone();
 
@@ -1769,7 +1767,7 @@
     }(Math));
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -1784,7 +1782,7 @@
          * SHA-1 hash algorithm.
          */
         var SHA1 = C_algo.SHA1 = Hasher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 this._hash = new WordArray.init([
                     0x67452301, 0xefcdab89,
                     0x98badcfe, 0x10325476,
@@ -1792,7 +1790,7 @@
                 ]);
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 // Shortcut
                 var H = this._hash.words;
 
@@ -1838,7 +1836,7 @@
                 H[4] = (H[4] + e) | 0;
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 // Shortcuts
                 var data = this._data;
                 var dataWords = data.words;
@@ -1859,7 +1857,7 @@
                 return this._hash;
             },
 
-            clone: function () {
+            clone: function() {
                 var clone = Hasher.clone.call(this);
                 clone._hash = this._hash.clone();
 
@@ -1901,7 +1899,7 @@
     }());
 
 
-    (function (Math) {
+    (function(Math) {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -1914,7 +1912,7 @@
         var K = [];
 
         // Compute constants
-        (function () {
+        (function() {
             function isPrime(n) {
                 var sqrtN = Math.sqrt(n);
                 for (var factor = 2; factor <= sqrtN; factor++) {
@@ -1953,11 +1951,11 @@
          * SHA-256 hash algorithm.
          */
         var SHA256 = C_algo.SHA256 = Hasher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 this._hash = new WordArray.init(H.slice(0));
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 // Shortcut
                 var H = this._hash.words;
 
@@ -2019,7 +2017,7 @@
                 H[7] = (H[7] + h) | 0;
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 // Shortcuts
                 var data = this._data;
                 var dataWords = data.words;
@@ -2040,7 +2038,7 @@
                 return this._hash;
             },
 
-            clone: function () {
+            clone: function() {
                 var clone = Hasher.clone.call(this);
                 clone._hash = this._hash.clone();
 
@@ -2082,7 +2080,7 @@
     }(Math));
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -2094,14 +2092,14 @@
          * SHA-224 hash algorithm.
          */
         var SHA224 = C_algo.SHA224 = SHA256.extend({
-            _doReset: function () {
+            _doReset: function() {
                 this._hash = new WordArray.init([
                     0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
                     0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
                 ]);
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 var hash = SHA256._doFinalize.call(this);
 
                 hash.sigBytes -= 4;
@@ -2144,7 +2142,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -2204,7 +2202,7 @@
 
         // Reusable objects
         var W = [];
-        (function () {
+        (function() {
             for (var i = 0; i < 80; i++) {
                 W[i] = X64Word_create();
             }
@@ -2214,7 +2212,7 @@
          * SHA-512 hash algorithm.
          */
         var SHA512 = C_algo.SHA512 = Hasher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 this._hash = new X64WordArray.init([
                     new X64Word.init(0x6a09e667, 0xf3bcc908), new X64Word.init(0xbb67ae85, 0x84caa73b),
                     new X64Word.init(0x3c6ef372, 0xfe94f82b), new X64Word.init(0xa54ff53a, 0x5f1d36f1),
@@ -2223,7 +2221,7 @@
                 ]);
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 // Shortcuts
                 var H = this._hash.words;
 
@@ -2384,7 +2382,7 @@
                 H7.high = (H7h + hh + ((H7l >>> 0) < (hl >>> 0) ? 1 : 0));
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 // Shortcuts
                 var data = this._data;
                 var dataWords = data.words;
@@ -2408,7 +2406,7 @@
                 return hash;
             },
 
-            clone: function () {
+            clone: function() {
                 var clone = Hasher.clone.call(this);
                 clone._hash = this._hash.clone();
 
@@ -2452,7 +2450,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_x64 = C.x64;
@@ -2465,7 +2463,7 @@
          * SHA-384 hash algorithm.
          */
         var SHA384 = C_algo.SHA384 = SHA512.extend({
-            _doReset: function () {
+            _doReset: function() {
                 this._hash = new X64WordArray.init([
                     new X64Word.init(0xcbbb9d5d, 0xc1059ed8), new X64Word.init(0x629a292a, 0x367cd507),
                     new X64Word.init(0x9159015a, 0x3070dd17), new X64Word.init(0x152fecd8, 0xf70e5939),
@@ -2474,7 +2472,7 @@
                 ]);
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 var hash = SHA512._doFinalize.call(this);
 
                 hash.sigBytes -= 16;
@@ -2517,7 +2515,7 @@
     }());
 
 
-    (function (Math) {
+    (function(Math) {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -2533,9 +2531,10 @@
         var ROUND_CONSTANTS = [];
 
         // Compute Constants
-        (function () {
+        (function() {
             // Compute rho offset constants
-            var x = 1, y = 0;
+            var x = 1,
+                y = 0;
             for (var t = 0; t < 24; t++) {
                 RHO_OFFSETS[x + 5 * y] = ((t + 1) * (t + 2) / 2) % 64;
 
@@ -2583,7 +2582,7 @@
 
         // Reusable objects for temporary values
         var T = [];
-        (function () {
+        (function() {
             for (var i = 0; i < 25; i++) {
                 T[i] = X64Word.create();
             }
@@ -2605,7 +2604,7 @@
                 outputLength: 512
             }),
 
-            _doReset: function () {
+            _doReset: function() {
                 var state = this._state = []
                 for (var i = 0; i < 25; i++) {
                     state[i] = new X64Word.init();
@@ -2614,7 +2613,7 @@
                 this.blockSize = (1600 - 2 * this.cfg.outputLength) / 32;
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 // Shortcuts
                 var state = this._state;
                 var nBlockSizeLanes = this.blockSize / 2;
@@ -2646,7 +2645,8 @@
                     // Theta
                     for (var x = 0; x < 5; x++) {
                         // Mix column lanes
-                        var tMsw = 0, tLsw = 0;
+                        var tMsw = 0,
+                            tLsw = 0;
                         for (var y = 0; y < 5; y++) {
                             var lane = state[x + 5 * y];
                             tMsw ^= lane.high;
@@ -2731,7 +2731,7 @@
                 }
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 // Shortcuts
                 var data = this._data;
                 var dataWords = data.words;
@@ -2779,7 +2779,7 @@
                 return new WordArray.init(hashWords, outputLengthBytes);
             },
 
-            clone: function () {
+            clone: function() {
                 var clone = Hasher.clone.call(this);
 
                 var state = clone._state = this._state.slice(0);
@@ -2826,17 +2826,17 @@
 
 
     /** @preserve
-     (c) 2012 by Cédric Mesnil. All rights reserved.
+    (c) 2012 by Cédric Mesnil. All rights reserved.
 
-     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-     - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-     - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+        - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+        - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-     */
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
 
-    (function (Math) {
+    (function(Math) {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -2850,25 +2850,29 @@
             7, 4, 13, 1, 10, 6, 15, 3, 12, 0, 9, 5, 2, 14, 11, 8,
             3, 10, 14, 4, 9, 15, 8, 1, 2, 7, 0, 6, 13, 11, 5, 12,
             1, 9, 11, 10, 0, 8, 12, 4, 13, 3, 7, 15, 14, 5, 6, 2,
-            4, 0, 5, 9, 7, 12, 2, 10, 14, 1, 3, 8, 11, 6, 15, 13]);
+            4, 0, 5, 9, 7, 12, 2, 10, 14, 1, 3, 8, 11, 6, 15, 13
+        ]);
         var _zr = WordArray.create([
             5, 14, 7, 0, 9, 2, 11, 4, 13, 6, 15, 8, 1, 10, 3, 12,
             6, 11, 3, 7, 0, 13, 5, 10, 14, 15, 8, 12, 4, 9, 1, 2,
             15, 5, 1, 3, 7, 14, 6, 9, 11, 8, 12, 2, 10, 0, 4, 13,
             8, 6, 4, 1, 3, 11, 15, 0, 5, 12, 2, 13, 9, 7, 10, 14,
-            12, 15, 10, 4, 1, 5, 8, 7, 6, 2, 13, 14, 0, 3, 9, 11]);
+            12, 15, 10, 4, 1, 5, 8, 7, 6, 2, 13, 14, 0, 3, 9, 11
+        ]);
         var _sl = WordArray.create([
             11, 14, 15, 12, 5, 8, 7, 9, 11, 13, 14, 15, 6, 7, 9, 8,
             7, 6, 8, 13, 11, 9, 7, 15, 7, 12, 15, 9, 11, 7, 13, 12,
             11, 13, 6, 7, 14, 9, 13, 15, 14, 8, 13, 6, 5, 12, 7, 5,
             11, 12, 14, 15, 14, 15, 9, 8, 9, 14, 5, 6, 8, 6, 5, 12,
-            9, 15, 5, 11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6]);
+            9, 15, 5, 11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6
+        ]);
         var _sr = WordArray.create([
             8, 9, 9, 11, 13, 15, 15, 5, 7, 7, 8, 11, 14, 14, 12, 6,
             9, 13, 15, 7, 12, 8, 9, 11, 7, 7, 12, 7, 6, 15, 13, 11,
             9, 7, 15, 11, 8, 6, 6, 14, 12, 13, 5, 14, 13, 13, 7, 5,
             15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8,
-            8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11]);
+            8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11
+        ]);
 
         var _hl = WordArray.create([0x00000000, 0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xA953FD4E]);
         var _hr = WordArray.create([0x50A28BE6, 0x5C4DD124, 0x6D703EF3, 0x7A6D76E9, 0x00000000]);
@@ -2877,11 +2881,11 @@
          * RIPEMD160 hash algorithm.
          */
         var RIPEMD160 = C_algo.RIPEMD160 = Hasher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 this._hash = WordArray.create([0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]);
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
 
                 // Swap endian
                 for (var i = 0; i < 16; i++) {
@@ -2925,7 +2929,7 @@
                         t += f3(bl, cl, dl) + hl[2];
                     } else if (i < 64) {
                         t += f4(bl, cl, dl) + hl[3];
-                    } else {// if (i<80) {
+                    } else { // if (i<80) {
                         t += f5(bl, cl, dl) + hl[4];
                     }
                     t = t | 0;
@@ -2946,7 +2950,7 @@
                         t += f3(br, cr, dr) + hr[2];
                     } else if (i < 64) {
                         t += f2(br, cr, dr) + hr[3];
-                    } else {// if (i<80) {
+                    } else { // if (i<80) {
                         t += f1(br, cr, dr) + hr[4];
                     }
                     t = t | 0;
@@ -2967,7 +2971,7 @@
                 H[0] = t;
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 // Shortcuts
                 var data = this._data;
                 var dataWords = data.words;
@@ -3004,7 +3008,7 @@
                 return hash;
             },
 
-            clone: function () {
+            clone: function() {
                 var clone = Hasher.clone.call(this);
                 clone._hash = this._hash.clone();
 
@@ -3074,7 +3078,7 @@
     }(Math));
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -3097,7 +3101,7 @@
              *
              *     var hmacHasher = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, key);
              */
-            init: function (hasher, key) {
+            init: function(hasher, key) {
                 // Init hasher
                 hasher = this._hasher = new hasher.init();
 
@@ -3144,7 +3148,7 @@
              *
              *     hmacHasher.reset();
              */
-            reset: function () {
+            reset: function() {
                 // Shortcut
                 var hasher = this._hasher;
 
@@ -3165,7 +3169,7 @@
              *     hmacHasher.update('message');
              *     hmacHasher.update(wordArray);
              */
-            update: function (messageUpdate) {
+            update: function(messageUpdate) {
                 this._hasher.update(messageUpdate);
 
                 // Chainable
@@ -3186,7 +3190,7 @@
              *     var hmac = hmacHasher.finalize('message');
              *     var hmac = hmacHasher.finalize(wordArray);
              */
-            finalize: function (messageUpdate) {
+            finalize: function(messageUpdate) {
                 // Shortcut
                 var hasher = this._hasher;
 
@@ -3201,7 +3205,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -3239,7 +3243,7 @@
              *     var kdf = CryptoJS.algo.PBKDF2.create({ keySize: 8 });
              *     var kdf = CryptoJS.algo.PBKDF2.create({ keySize: 8, iterations: 1000 });
              */
-            init: function (cfg) {
+            init: function(cfg) {
                 this.cfg = this.cfg.extend(cfg);
             },
 
@@ -3255,7 +3259,7 @@
              *
              *     var key = kdf.compute(password, salt);
              */
-            compute: function (password, salt) {
+            compute: function(password, salt) {
                 // Shortcut
                 var cfg = this.cfg;
 
@@ -3322,13 +3326,13 @@
          *     var key = CryptoJS.PBKDF2(password, salt, { keySize: 8 });
          *     var key = CryptoJS.PBKDF2(password, salt, { keySize: 8, iterations: 1000 });
          */
-        C.PBKDF2 = function (password, salt, cfg) {
+        C.PBKDF2 = function(password, salt, cfg) {
             return PBKDF2.create(cfg).compute(password, salt);
         };
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -3366,7 +3370,7 @@
              *     var kdf = CryptoJS.algo.EvpKDF.create({ keySize: 8 });
              *     var kdf = CryptoJS.algo.EvpKDF.create({ keySize: 8, iterations: 1000 });
              */
-            init: function (cfg) {
+            init: function(cfg) {
                 this.cfg = this.cfg.extend(cfg);
             },
 
@@ -3382,7 +3386,7 @@
              *
              *     var key = kdf.compute(password, salt);
              */
-            compute: function (password, salt) {
+            compute: function(password, salt) {
                 var block;
 
                 // Shortcut
@@ -3438,7 +3442,7 @@
          *     var key = CryptoJS.EvpKDF(password, salt, { keySize: 8 });
          *     var key = CryptoJS.EvpKDF(password, salt, { keySize: 8, iterations: 1000 });
          */
-        C.EvpKDF = function (password, salt, cfg) {
+        C.EvpKDF = function(password, salt, cfg) {
             return EvpKDF.create(cfg).compute(password, salt);
         };
     }());
@@ -3447,7 +3451,7 @@
     /**
      * Cipher core components.
      */
-    CryptoJS.lib.Cipher || (function (undefined) {
+    CryptoJS.lib.Cipher || (function(undefined) {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -3490,7 +3494,7 @@
              *
              *     var cipher = CryptoJS.algo.AES.createEncryptor(keyWordArray, { iv: ivWordArray });
              */
-            createEncryptor: function (key, cfg) {
+            createEncryptor: function(key, cfg) {
                 return this.create(this._ENC_XFORM_MODE, key, cfg);
             },
 
@@ -3508,7 +3512,7 @@
              *
              *     var cipher = CryptoJS.algo.AES.createDecryptor(keyWordArray, { iv: ivWordArray });
              */
-            createDecryptor: function (key, cfg) {
+            createDecryptor: function(key, cfg) {
                 return this.create(this._DEC_XFORM_MODE, key, cfg);
             },
 
@@ -3523,7 +3527,7 @@
              *
              *     var cipher = CryptoJS.algo.AES.create(CryptoJS.algo.AES._ENC_XFORM_MODE, keyWordArray, { iv: ivWordArray });
              */
-            init: function (xformMode, key, cfg) {
+            init: function(xformMode, key, cfg) {
                 // Apply config defaults
                 this.cfg = this.cfg.extend(cfg);
 
@@ -3542,7 +3546,7 @@
              *
              *     cipher.reset();
              */
-            reset: function () {
+            reset: function() {
                 // Reset data buffer
                 BufferedBlockAlgorithm.reset.call(this);
 
@@ -3562,7 +3566,7 @@
              *     var encrypted = cipher.process('data');
              *     var encrypted = cipher.process(wordArray);
              */
-            process: function (dataUpdate) {
+            process: function(dataUpdate) {
                 // Append
                 this._append(dataUpdate);
 
@@ -3584,7 +3588,7 @@
              *     var encrypted = cipher.finalize('data');
              *     var encrypted = cipher.finalize(wordArray);
              */
-            finalize: function (dataUpdate) {
+            finalize: function(dataUpdate) {
                 // Final data update
                 if (dataUpdate) {
                     this._append(dataUpdate);
@@ -3617,7 +3621,7 @@
              *
              *     var AES = CryptoJS.lib.Cipher._createHelper(CryptoJS.algo.AES);
              */
-            _createHelper: (function () {
+            _createHelper: (function() {
                 function selectCipherStrategy(key) {
                     if (typeof key == 'string') {
                         return PasswordBasedCipher;
@@ -3626,13 +3630,13 @@
                     }
                 }
 
-                return function (cipher) {
+                return function(cipher) {
                     return {
-                        encrypt: function (message, key, cfg) {
+                        encrypt: function(message, key, cfg) {
                             return selectCipherStrategy(key).encrypt(cipher, message, key, cfg);
                         },
 
-                        decrypt: function (ciphertext, key, cfg) {
+                        decrypt: function(ciphertext, key, cfg) {
                             return selectCipherStrategy(key).decrypt(cipher, ciphertext, key, cfg);
                         }
                     };
@@ -3646,7 +3650,7 @@
          * @property {number} blockSize The number of 32-bit words this cipher operates on. Default: 1 (32 bits)
          */
         var StreamCipher = C_lib.StreamCipher = Cipher.extend({
-            _doFinalize: function () {
+            _doFinalize: function() {
                 // Process partial blocks
                 var finalProcessedBlocks = this._process(!!'flush');
 
@@ -3677,7 +3681,7 @@
              *
              *     var mode = CryptoJS.mode.CBC.createEncryptor(cipher, iv.words);
              */
-            createEncryptor: function (cipher, iv) {
+            createEncryptor: function(cipher, iv) {
                 return this.Encryptor.create(cipher, iv);
             },
 
@@ -3693,7 +3697,7 @@
              *
              *     var mode = CryptoJS.mode.CBC.createDecryptor(cipher, iv.words);
              */
-            createDecryptor: function (cipher, iv) {
+            createDecryptor: function(cipher, iv) {
                 return this.Decryptor.create(cipher, iv);
             },
 
@@ -3707,7 +3711,7 @@
              *
              *     var mode = CryptoJS.mode.CBC.Encryptor.create(cipher, iv.words);
              */
-            init: function (cipher, iv) {
+            init: function(cipher, iv) {
                 this._cipher = cipher;
                 this._iv = iv;
             }
@@ -3716,7 +3720,7 @@
         /**
          * Cipher Block Chaining mode.
          */
-        var CBC = C_mode.CBC = (function () {
+        var CBC = C_mode.CBC = (function() {
             /**
              * Abstract base CBC mode.
              */
@@ -3736,7 +3740,7 @@
                  *
                  *     mode.processBlock(data.words, offset);
                  */
-                processBlock: function (words, offset) {
+                processBlock: function(words, offset) {
                     // Shortcuts
                     var cipher = this._cipher;
                     var blockSize = cipher.blockSize;
@@ -3764,7 +3768,7 @@
                  *
                  *     mode.processBlock(data.words, offset);
                  */
-                processBlock: function (words, offset) {
+                processBlock: function(words, offset) {
                     // Shortcuts
                     var cipher = this._cipher;
                     var blockSize = cipher.blockSize;
@@ -3827,7 +3831,7 @@
              *
              *     CryptoJS.pad.Pkcs7.pad(wordArray, 4);
              */
-            pad: function (data, blockSize) {
+            pad: function(data, blockSize) {
                 // Shortcut
                 var blockSizeBytes = blockSize * 4;
 
@@ -3859,7 +3863,7 @@
              *
              *     CryptoJS.pad.Pkcs7.unpad(wordArray);
              */
-            unpad: function (data) {
+            unpad: function(data) {
                 // Get number of padding bytes from last byte
                 var nPaddingBytes = data.words[(data.sigBytes - 1) >>> 2] & 0xff;
 
@@ -3885,7 +3889,7 @@
                 padding: Pkcs7
             }),
 
-            reset: function () {
+            reset: function() {
                 var modeCreator;
 
                 // Reset cipher
@@ -3913,11 +3917,11 @@
                 }
             },
 
-            _doProcessBlock: function (words, offset) {
+            _doProcessBlock: function(words, offset) {
                 this._mode.processBlock(words, offset);
             },
 
-            _doFinalize: function () {
+            _doFinalize: function() {
                 var finalProcessedBlocks;
 
                 // Shortcut
@@ -3977,7 +3981,7 @@
              *         formatter: CryptoJS.format.OpenSSL
              *     });
              */
-            init: function (cipherParams) {
+            init: function(cipherParams) {
                 this.mixIn(cipherParams);
             },
 
@@ -3996,7 +4000,7 @@
              *     var string = cipherParams.toString();
              *     var string = cipherParams.toString(CryptoJS.format.OpenSSL);
              */
-            toString: function (formatter) {
+            toString: function(formatter) {
                 return (formatter || this.formatter).stringify(this);
             }
         });
@@ -4023,7 +4027,7 @@
              *
              *     var openSSLString = CryptoJS.format.OpenSSL.stringify(cipherParams);
              */
-            stringify: function (cipherParams) {
+            stringify: function(cipherParams) {
                 var wordArray;
 
                 // Shortcuts
@@ -4053,7 +4057,7 @@
              *
              *     var cipherParams = CryptoJS.format.OpenSSL.parse(openSSLString);
              */
-            parse: function (openSSLStr) {
+            parse: function(openSSLStr) {
                 var salt;
 
                 // Parse base64
@@ -4072,7 +4076,10 @@
                     ciphertext.sigBytes -= 16;
                 }
 
-                return CipherParams.create({ciphertext: ciphertext, salt: salt});
+                return CipherParams.create({
+                    ciphertext: ciphertext,
+                    salt: salt
+                });
             }
         };
 
@@ -4107,7 +4114,7 @@
              *     var ciphertextParams = CryptoJS.lib.SerializableCipher.encrypt(CryptoJS.algo.AES, message, key, { iv: iv });
              *     var ciphertextParams = CryptoJS.lib.SerializableCipher.encrypt(CryptoJS.algo.AES, message, key, { iv: iv, format: CryptoJS.format.OpenSSL });
              */
-            encrypt: function (cipher, message, key, cfg) {
+            encrypt: function(cipher, message, key, cfg) {
                 // Apply config defaults
                 cfg = this.cfg.extend(cfg);
 
@@ -4148,7 +4155,7 @@
              *     var plaintext = CryptoJS.lib.SerializableCipher.decrypt(CryptoJS.algo.AES, formattedCiphertext, key, { iv: iv, format: CryptoJS.format.OpenSSL });
              *     var plaintext = CryptoJS.lib.SerializableCipher.decrypt(CryptoJS.algo.AES, ciphertextParams, key, { iv: iv, format: CryptoJS.format.OpenSSL });
              */
-            decrypt: function (cipher, ciphertext, key, cfg) {
+            decrypt: function(cipher, ciphertext, key, cfg) {
                 // Apply config defaults
                 cfg = this.cfg.extend(cfg);
 
@@ -4176,7 +4183,7 @@
              *
              *     var ciphertextParams = CryptoJS.lib.SerializableCipher._parse(ciphertextStringOrParams, format);
              */
-            _parse: function (ciphertext, format) {
+            _parse: function(ciphertext, format) {
                 if (typeof ciphertext == 'string') {
                     return format.parse(ciphertext, this);
                 } else {
@@ -4211,21 +4218,27 @@
              *     var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32);
              *     var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32, 'saltsalt');
              */
-            execute: function (password, keySize, ivSize, salt) {
+            execute: function(password, keySize, ivSize, salt) {
                 // Generate random salt
                 if (!salt) {
                     salt = WordArray.random(64 / 8);
                 }
 
                 // Derive key and IV
-                var key = EvpKDF.create({keySize: keySize + ivSize}).compute(password, salt);
+                var key = EvpKDF.create({
+                    keySize: keySize + ivSize
+                }).compute(password, salt);
 
                 // Separate key and IV
                 var iv = WordArray.create(key.words.slice(keySize), ivSize * 4);
                 key.sigBytes = keySize * 4;
 
                 // Return params
-                return CipherParams.create({key: key, iv: iv, salt: salt});
+                return CipherParams.create({
+                    key: key,
+                    iv: iv,
+                    salt: salt
+                });
             }
         };
 
@@ -4260,7 +4273,7 @@
              *     var ciphertextParams = CryptoJS.lib.PasswordBasedCipher.encrypt(CryptoJS.algo.AES, message, 'password');
              *     var ciphertextParams = CryptoJS.lib.PasswordBasedCipher.encrypt(CryptoJS.algo.AES, message, 'password', { format: CryptoJS.format.OpenSSL });
              */
-            encrypt: function (cipher, message, password, cfg) {
+            encrypt: function(cipher, message, password, cfg) {
                 // Apply config defaults
                 cfg = this.cfg.extend(cfg);
 
@@ -4296,7 +4309,7 @@
              *     var plaintext = CryptoJS.lib.PasswordBasedCipher.decrypt(CryptoJS.algo.AES, formattedCiphertext, 'password', { format: CryptoJS.format.OpenSSL });
              *     var plaintext = CryptoJS.lib.PasswordBasedCipher.decrypt(CryptoJS.algo.AES, ciphertextParams, 'password', { format: CryptoJS.format.OpenSSL });
              */
-            decrypt: function (cipher, ciphertext, password, cfg) {
+            decrypt: function(cipher, ciphertext, password, cfg) {
                 // Apply config defaults
                 cfg = this.cfg.extend(cfg);
 
@@ -4321,11 +4334,11 @@
     /**
      * Cipher Feedback block mode.
      */
-    CryptoJS.mode.CFB = (function () {
+    CryptoJS.mode.CFB = (function() {
         var CFB = CryptoJS.lib.BlockCipherMode.extend();
 
         CFB.Encryptor = CFB.extend({
-            processBlock: function (words, offset) {
+            processBlock: function(words, offset) {
                 // Shortcuts
                 var cipher = this._cipher;
                 var blockSize = cipher.blockSize;
@@ -4338,7 +4351,7 @@
         });
 
         CFB.Decryptor = CFB.extend({
-            processBlock: function (words, offset) {
+            processBlock: function(words, offset) {
                 // Shortcuts
                 var cipher = this._cipher;
                 var blockSize = cipher.blockSize;
@@ -4383,11 +4396,11 @@
     /**
      * Counter block mode.
      */
-    CryptoJS.mode.CTR = (function () {
+    CryptoJS.mode.CTR = (function() {
         var CTR = CryptoJS.lib.BlockCipherMode.extend();
 
         var Encryptor = CTR.Encryptor = CTR.extend({
-            processBlock: function (words, offset) {
+            processBlock: function(words, offset) {
                 // Shortcuts
                 var cipher = this._cipher
                 var blockSize = cipher.blockSize;
@@ -4425,7 +4438,7 @@
      * derived from CryptoJS.mode.CTR
      * Jan Hruby jhruby.web@gmail.com
      */
-    CryptoJS.mode.CTRGladman = (function () {
+    CryptoJS.mode.CTRGladman = (function() {
         var CTRGladman = CryptoJS.lib.BlockCipherMode.extend();
 
         function incWord(word) {
@@ -4470,7 +4483,7 @@
         }
 
         var Encryptor = CTRGladman.Encryptor = CTRGladman.extend({
-            processBlock: function (words, offset) {
+            processBlock: function(words, offset) {
                 // Shortcuts
                 var cipher = this._cipher
                 var blockSize = cipher.blockSize;
@@ -4503,14 +4516,16 @@
     }());
 
 
+
+
     /**
      * Output Feedback block mode.
      */
-    CryptoJS.mode.OFB = (function () {
+    CryptoJS.mode.OFB = (function() {
         var OFB = CryptoJS.lib.BlockCipherMode.extend();
 
         var Encryptor = OFB.Encryptor = OFB.extend({
-            processBlock: function (words, offset) {
+            processBlock: function(words, offset) {
                 // Shortcuts
                 var cipher = this._cipher
                 var blockSize = cipher.blockSize;
@@ -4542,17 +4557,17 @@
     /**
      * Electronic Codebook block mode.
      */
-    CryptoJS.mode.ECB = (function () {
+    CryptoJS.mode.ECB = (function() {
         var ECB = CryptoJS.lib.BlockCipherMode.extend();
 
         ECB.Encryptor = ECB.extend({
-            processBlock: function (words, offset) {
+            processBlock: function(words, offset) {
                 this._cipher.encryptBlock(words, offset);
             }
         });
 
         ECB.Decryptor = ECB.extend({
-            processBlock: function (words, offset) {
+            processBlock: function(words, offset) {
                 this._cipher.decryptBlock(words, offset);
             }
         });
@@ -4565,7 +4580,7 @@
      * ANSI X.923 padding strategy.
      */
     CryptoJS.pad.AnsiX923 = {
-        pad: function (data, blockSize) {
+        pad: function(data, blockSize) {
             // Shortcuts
             var dataSigBytes = data.sigBytes;
             var blockSizeBytes = blockSize * 4;
@@ -4582,7 +4597,7 @@
             data.sigBytes += nPaddingBytes;
         },
 
-        unpad: function (data) {
+        unpad: function(data) {
             // Get number of padding bytes from last byte
             var nPaddingBytes = data.words[(data.sigBytes - 1) >>> 2] & 0xff;
 
@@ -4596,7 +4611,7 @@
      * ISO 10126 padding strategy.
      */
     CryptoJS.pad.Iso10126 = {
-        pad: function (data, blockSize) {
+        pad: function(data, blockSize) {
             // Shortcut
             var blockSizeBytes = blockSize * 4;
 
@@ -4604,10 +4619,11 @@
             var nPaddingBytes = blockSizeBytes - data.sigBytes % blockSizeBytes;
 
             // Pad
-            data.concat(CryptoJS.lib.WordArray.random(nPaddingBytes - 1)).concat(CryptoJS.lib.WordArray.create([nPaddingBytes << 24], 1));
+            data.concat(CryptoJS.lib.WordArray.random(nPaddingBytes - 1)).
+            concat(CryptoJS.lib.WordArray.create([nPaddingBytes << 24], 1));
         },
 
-        unpad: function (data) {
+        unpad: function(data) {
             // Get number of padding bytes from last byte
             var nPaddingBytes = data.words[(data.sigBytes - 1) >>> 2] & 0xff;
 
@@ -4621,7 +4637,7 @@
      * ISO/IEC 9797-1 Padding Method 2.
      */
     CryptoJS.pad.Iso97971 = {
-        pad: function (data, blockSize) {
+        pad: function(data, blockSize) {
             // Add 0x80 byte
             data.concat(CryptoJS.lib.WordArray.create([0x80000000], 1));
 
@@ -4629,7 +4645,7 @@
             CryptoJS.pad.ZeroPadding.pad(data, blockSize);
         },
 
-        unpad: function (data) {
+        unpad: function(data) {
             // Remove zero padding
             CryptoJS.pad.ZeroPadding.unpad(data);
 
@@ -4643,7 +4659,7 @@
      * Zero padding strategy.
      */
     CryptoJS.pad.ZeroPadding = {
-        pad: function (data, blockSize) {
+        pad: function(data, blockSize) {
             // Shortcut
             var blockSizeBytes = blockSize * 4;
 
@@ -4652,7 +4668,7 @@
             data.sigBytes += blockSizeBytes - ((data.sigBytes % blockSizeBytes) || blockSizeBytes);
         },
 
-        unpad: function (data) {
+        unpad: function(data) {
             // Shortcut
             var dataWords = data.words;
 
@@ -4672,15 +4688,13 @@
      * A noop padding strategy.
      */
     CryptoJS.pad.NoPadding = {
-        pad: function () {
-        },
+        pad: function() {},
 
-        unpad: function () {
-        }
+        unpad: function() {}
     };
 
 
-    (function (undefined) {
+    (function(undefined) {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -4703,7 +4717,7 @@
              *
              *     var hexString = CryptoJS.format.Hex.stringify(cipherParams);
              */
-            stringify: function (cipherParams) {
+            stringify: function(cipherParams) {
                 return cipherParams.ciphertext.toString(Hex);
             },
 
@@ -4720,15 +4734,17 @@
              *
              *     var cipherParams = CryptoJS.format.Hex.parse(hexString);
              */
-            parse: function (input) {
+            parse: function(input) {
                 var ciphertext = Hex.parse(input);
-                return CipherParams.create({ciphertext: ciphertext});
+                return CipherParams.create({
+                    ciphertext: ciphertext
+                });
             }
         };
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -4748,7 +4764,7 @@
         var INV_SUB_MIX_3 = [];
 
         // Compute lookup tables
-        (function () {
+        (function() {
             // Compute double table
             var d = [];
             for (var i = 0; i < 256; i++) {
@@ -4805,7 +4821,7 @@
          * AES block cipher algorithm.
          */
         var AES = C_algo.AES = BlockCipher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 var t;
 
                 // Skip reset of nRounds has been set before and key did not change
@@ -4870,11 +4886,11 @@
                 }
             },
 
-            encryptBlock: function (M, offset) {
+            encryptBlock: function(M, offset) {
                 this._doCryptBlock(M, offset, this._keySchedule, SUB_MIX_0, SUB_MIX_1, SUB_MIX_2, SUB_MIX_3, SBOX);
             },
 
-            decryptBlock: function (M, offset) {
+            decryptBlock: function(M, offset) {
                 // Swap 2nd and 4th rows
                 var t = M[offset + 1];
                 M[offset + 1] = M[offset + 3];
@@ -4888,7 +4904,7 @@
                 M[offset + 3] = t;
             },
 
-            _doCryptBlock: function (M, offset, keySchedule, SUB_MIX_0, SUB_MIX_1, SUB_MIX_2, SUB_MIX_3, SBOX) {
+            _doCryptBlock: function(M, offset, keySchedule, SUB_MIX_0, SUB_MIX_1, SUB_MIX_2, SUB_MIX_3, SBOX) {
                 // Shortcut
                 var nRounds = this._nRounds;
 
@@ -4944,7 +4960,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -4979,8 +4995,7 @@
         var BIT_SHIFTS = [1, 2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28];
 
         // SBOXes and round permutation constants
-        var SBOX_P = [
-            {
+        var SBOX_P = [{
                 0x0: 0x808200,
                 0x10000000: 0x8000,
                 0x20000000: 0x808002,
@@ -5520,7 +5535,7 @@
          * DES block cipher algorithm.
          */
         var DES = C_algo.DES = BlockCipher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 // Shortcuts
                 var key = this._key;
                 var keyWords = key.words;
@@ -5567,15 +5582,15 @@
                 }
             },
 
-            encryptBlock: function (M, offset) {
+            encryptBlock: function(M, offset) {
                 this._doCryptBlock(M, offset, this._subKeys);
             },
 
-            decryptBlock: function (M, offset) {
+            decryptBlock: function(M, offset) {
                 this._doCryptBlock(M, offset, this._invSubKeys);
             },
 
-            _doCryptBlock: function (M, offset, subKeys) {
+            _doCryptBlock: function(M, offset, subKeys) {
                 // Get input
                 this._lBlock = M[offset];
                 this._rBlock = M[offset + 1];
@@ -5654,7 +5669,7 @@
          * Triple-DES block cipher algorithm.
          */
         var TripleDES = C_algo.TripleDES = BlockCipher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 // Shortcuts
                 var key = this._key;
                 var keyWords = key.words;
@@ -5674,13 +5689,13 @@
                 this._des3 = DES.createEncryptor(WordArray.create(key3));
             },
 
-            encryptBlock: function (M, offset) {
+            encryptBlock: function(M, offset) {
                 this._des1.encryptBlock(M, offset);
                 this._des2.decryptBlock(M, offset);
                 this._des3.encryptBlock(M, offset);
             },
 
-            decryptBlock: function (M, offset) {
+            decryptBlock: function(M, offset) {
                 this._des3.decryptBlock(M, offset);
                 this._des2.encryptBlock(M, offset);
                 this._des1.decryptBlock(M, offset);
@@ -5705,7 +5720,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -5716,7 +5731,7 @@
          * RC4 stream cipher algorithm.
          */
         var RC4 = C_algo.RC4 = StreamCipher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 // Shortcuts
                 var key = this._key;
                 var keyWords = key.words;
@@ -5745,7 +5760,7 @@
                 this._i = this._j = 0;
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 M[offset] ^= generateKeystreamWord.call(this);
             },
 
@@ -5804,7 +5819,7 @@
                 drop: 192
             }),
 
-            _doReset: function () {
+            _doReset: function() {
                 RC4._doReset.call(this);
 
                 // Drop
@@ -5826,7 +5841,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -5842,7 +5857,7 @@
          * Rabbit stream cipher algorithm
          */
         var Rabbit = C_algo.Rabbit = StreamCipher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 // Shortcuts
                 var K = this._key.words;
                 var iv = this.cfg.iv;
@@ -5912,7 +5927,7 @@
                 }
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 // Shortcut
                 var X = this._X;
 
@@ -6000,7 +6015,7 @@
     }());
 
 
-    (function () {
+    (function() {
         // Shortcuts
         var C = CryptoJS;
         var C_lib = C.lib;
@@ -6020,7 +6035,7 @@
          * but it does affect its compatibility with other implementations.
          */
         var RabbitLegacy = C_algo.RabbitLegacy = StreamCipher.extend({
-            _doReset: function () {
+            _doReset: function() {
                 // Shortcuts
                 var K = this._key.words;
                 var iv = this.cfg.iv;
@@ -6084,7 +6099,7 @@
                 }
             },
 
-            _doProcessBlock: function (M, offset) {
+            _doProcessBlock: function(M, offset) {
                 // Shortcut
                 var X = this._X;
 
